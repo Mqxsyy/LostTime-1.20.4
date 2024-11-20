@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "losttime",
+	"version": "${version}",
+	"name": "Lost Time",
+	"description": "",
+	"authors": [
+		"Mqx!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "MIT",
+	"icon": "assets/losttime/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.mqx.losttime.LostTime"
+		],
+		"client": [
+			"net.mqx.losttime.LostTimeClient"
+		],
+		"fabric-datagen": [
+			"net.mqx.losttime.LostTimeDataGenerator"
+		]
+	},
+	"mixins": [
+		"losttime.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.9",
+		"minecraft": "~1.20.4",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
