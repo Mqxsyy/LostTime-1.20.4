@@ -10,13 +10,13 @@ import net.minecraft.util.Identifier;
 import net.mqx.losttime.LostTime;
 
 public class ModItemGroups {
-    public static final ItemGroup LOSTTIME_GROUP= Registry.register(
+    public static final ItemGroup LOSTTIME_GROUP = Registry.register(
             Registries.ITEM_GROUP, new Identifier(LostTime.MOD_ID, "losttime"),
             FabricItemGroup.builder().displayName(Text.translatable("itemgroup.losttime"))
-                    .icon(() -> new ItemStack(ModItems.ICE_SHARD))
-                    .entries(((displayContext, entries) -> {
+                    .icon(() -> new ItemStack(ModItems.ICE_SHARD)).entries(((displayContext, entries) -> {
                         entries.add(ModItems.ICE_SHARD);
-                    })).build());
+                    })).build()
+    );
 
     public static void registerModItemGroups() {
         LostTime.LOGGER.info("Registering Mod Item Groups for " + LostTime.MOD_ID);
