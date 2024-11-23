@@ -6,7 +6,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
-import net.mqx.losttime.entity.ModEntityType;
 import net.mqx.losttime.entity.projectile.IceSpearProjectileEntity;
 
 public class IceWandItem extends Item {
@@ -17,7 +16,7 @@ public class IceWandItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (!world.isClient()) {
-            IceSpearProjectileEntity projectile = new IceSpearProjectileEntity(ModEntityType.ICE_SPEAR, world);
+            IceSpearProjectileEntity projectile = new IceSpearProjectileEntity(world, user);
             world.spawnEntity(projectile);
         }
 
