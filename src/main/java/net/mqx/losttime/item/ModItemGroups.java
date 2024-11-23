@@ -15,6 +15,7 @@ public class ModItemGroups {
             FabricItemGroup.builder().displayName(Text.translatable("itemgroup.losttime"))
                     .icon(() -> new ItemStack(ModItems.ICE_SHARD)).entries(((displayContext, entries) -> {
                         entries.add(ModItems.ICE_SHARD);
+                        entries.add(ModItems.ICE_WAND);
                     })).build()
     );
 

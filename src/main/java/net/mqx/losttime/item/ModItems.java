@@ -12,6 +12,7 @@ import net.mqx.losttime.LostTime;
 
 public class ModItems {
     public static final Item ICE_SHARD = registerItem("ice_shard", new Item(new FabricItemSettings()));
+    public static final Item ICE_WAND = registerItem("ice_wand", new IceWandItem(new FabricItemSettings()));
 
     private static void addItemsToIngredientItemGroup(FabricItemGroupEntries entries) {
         entries.add(ICE_SHARD);
