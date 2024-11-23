@@ -12,6 +12,7 @@ import net.mqx.losttime.entity.ModEntityType;
 
 @Environment(EnvType.CLIENT)
 public class LostTimeClient implements ClientModInitializer {
+
     @Override
     public void onInitializeClient() {
         EntityRendererRegistry.register(ModEntityType.ICE_SPEAR, IceSpearEntityRenderer::new);

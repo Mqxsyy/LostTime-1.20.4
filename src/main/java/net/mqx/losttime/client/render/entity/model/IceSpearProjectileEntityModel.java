@@ -6,7 +6,6 @@ import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.mqx.losttime.LostTime;
 
 @Environment(EnvType.CLIENT)
 public class IceSpearProjectileEntityModel extends Model {
@@ -50,7 +49,7 @@ public class IceSpearProjectileEntityModel extends Model {
                         .cuboid(1.0F, -21.0F, -2.0F, 1.0F, 6.0F, 1.0F, new Dilation(0.0F)).uv(4, 27)
                         .cuboid(0.0F, -20.0F, -3.0F, 1.0F, 3.0F, 1.0F, new Dilation(0.0F)).uv(28, 0)
                         .cuboid(-1.0F, -19.0F, -3.0F, 1.0F, 3.0F, 1.0F, new Dilation(0.0F)),
-                ModelTransform.pivot(0.0F, 24.0F, 0.0F)
+                ModelTransform.pivot(0.0F, 23.0F, 0.0F)
         );
 
         return TexturedModelData.of(modelData, 32, 32);

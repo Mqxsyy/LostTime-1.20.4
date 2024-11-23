@@ -1,7 +1,6 @@
 package net.mqx.losttime;
 
 import net.fabricmc.api.ModInitializer;
-
 import net.mqx.losttime.item.ModItemGroups;
 import net.mqx.losttime.item.ModItems;
 import org.slf4j.Logger;

@@ -5,10 +5,15 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 import net.mqx.losttime.LostTime;
 import net.mqx.losttime.client.render.entity.model.IceSpearProjectileEntityModel;
 import net.mqx.losttime.client.render.entity.model.ModEntityModelLayers;
@@ -34,10 +39,23 @@ public class IceSpearEntityRenderer extends EntityRenderer<IceSpearProjectileEnt
             int light
     ) {
         matrices.push();
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(
+                MathHelper.lerp(tickDelta, entity.prevYaw, entity.getYaw()) - 90.0F));
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(
+                MathHelper.lerp(tickDelta, entity.prevPitch, entity.getPitch()) + 90.0F));
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(this.model.getLayer(this.getTexture(entity)));
-        this.model.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
+
+        Vec3d pos = entity.getPos().subtract(entity.getVelocity());
+        int x = (int) Math.floor(pos.x);
+        int y = (int) Math.floor(pos.y);
+        int z = (int) Math.floor(pos.z);
+
+        BlockPos blockPos = new BlockPos(x, y, z);
+        int lightAbove = WorldRenderer.getLightmapCoordinates(entity.getWorld(), blockPos);
+
+        this.model.render(matrices, vertexConsumer, lightAbove, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
         matrices.pop();
-        super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
+        super.render(entity, yaw, tickDelta, matrices, vertexConsumers, lightAbove);
     }
 
     @Override

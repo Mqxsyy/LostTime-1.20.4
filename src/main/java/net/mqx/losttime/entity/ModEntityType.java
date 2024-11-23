@@ -18,7 +18,7 @@ public class ModEntityType implements ModInitializer {
     public static final EntityType<IceSpearProjectileEntity> ICE_SPEAR = register(
             "ice_spear",
             EntityType.Builder.<IceSpearProjectileEntity>create(IceSpearProjectileEntity::new, SpawnGroup.MISC)
-                    .setDimensions(0.25f, 0.25f)
+                    .setDimensions(0.5f, 0.5f)
     );
 
     @Override
