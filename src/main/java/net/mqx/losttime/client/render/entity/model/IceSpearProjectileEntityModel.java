@@ -1,13 +1,10 @@
 package net.mqx.losttime.client.render.entity.model;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;
 
-@Environment(EnvType.CLIENT)
 public class IceSpearProjectileEntityModel extends Model {
     private final ModelPart iceSpear;
 

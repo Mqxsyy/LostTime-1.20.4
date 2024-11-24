@@ -4,6 +4,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.MathHelper;
@@ -14,6 +18,7 @@ import net.mqx.losttime.entity.ModEntityType;
 
 public class IceSpearProjectileEntity extends ProjectileEntity {
     private boolean inGround = false;
+    public boolean isExploding = false;
     private int age = 0;
 
     public IceSpearProjectileEntity(EntityType<? extends ProjectileEntity> entityType, World world) {
@@ -75,7 +80,17 @@ public class IceSpearProjectileEntity extends ProjectileEntity {
 
         this.age++;
 
-        if (this.age > 300) {
+        if (this.age > 60) {
+            if (isExploding)
+                return;
+
+            ServerWorld world = (ServerWorld) getWorld();
+            Vec3d pos = getPos().subtract(getVelocity());
+
+            world.playSound(null, this.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 0.5F, 1.05F);
+            world.spawnParticles(ParticleTypes.CLOUD, pos.x, pos.y, pos.z, 3, 0.1F, 0.1F, 0.1F, 0.02F);
+            world.spawnParticles(ParticleTypes.WHITE_SMOKE, pos.x, pos.y, pos.z, 10, 0.1F, 0.1F, 0.1F, 0.04F);
+
             this.remove(Entity.RemovalReason.DISCARDED);
         }
     }
@@ -91,6 +106,18 @@ public class IceSpearProjectileEntity extends ProjectileEntity {
     }
 
     public void Explode() {
+        if (isExploding)
+            return;
+
+        isExploding = true;
+
+        ServerWorld world = (ServerWorld) getWorld();
+        Vec3d pos = getPos().subtract(getVelocity());
+
+        world.playSound(null, this.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 1F, 1.05F);
+        world.spawnParticles(ParticleTypes.CLOUD, pos.x, pos.y, pos.z, 5, 0.1F, 0.1F, 0.1F, 0.05F);
+        world.spawnParticles(ParticleTypes.WHITE_SMOKE, pos.x, pos.y, pos.z, 25, 0.1F, 0.1F, 0.1F, 0.15F);
+
         this.remove(RemovalReason.DISCARDED);
     }
 }

@@ -1,7 +1,5 @@
 package net.mqx.losttime.client.render.entity;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -19,7 +17,6 @@ import net.mqx.losttime.client.render.entity.model.IceSpearProjectileEntityModel
 import net.mqx.losttime.client.render.entity.model.ModEntityModelLayers;
 import net.mqx.losttime.entity.projectile.IceSpearProjectileEntity;
 
-@Environment(EnvType.CLIENT)
 public class IceSpearEntityRenderer extends EntityRenderer<IceSpearProjectileEntity> {
     private final IceSpearProjectileEntityModel model;
     private static final Identifier TEXTURE = new Identifier(LostTime.MOD_ID, "textures/entity/ice_spear.png");
