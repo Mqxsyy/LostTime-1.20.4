@@ -3,18 +3,24 @@ package net.mqx.losttime.entity.projectile;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import net.mqx.losttime.entity.ModEntityType;
+
+import java.util.List;
 
 public class IceSpearProjectileEntity extends ProjectileEntity {
     private boolean inGround = false;
@@ -59,10 +65,18 @@ public class IceSpearProjectileEntity extends ProjectileEntity {
 
             this.setVelocity(new Vec3d(x, y, z));
 
-            HitResult hitResult = this.getWorld().raycast(new RaycastContext(
-                    position, position.add(this.getVelocity()), RaycastContext.ShapeType.COLLIDER,
-                    RaycastContext.FluidHandling.NONE, this
-            ));
+            HitResult hitResult = this.getWorld()
+                    .raycast(new RaycastContext(
+                            position, position.add(this.getVelocity()), RaycastContext.ShapeType.COLLIDER,
+                            RaycastContext.FluidHandling.NONE, this
+                    ));
+
+            if (hitResult.getType() == HitResult.Type.MISS) {
+                EntityHitResult entityHitResult = this.getEntityCollision(position, position.add(this.getVelocity()));
+                if (entityHitResult != null) {
+                    hitResult = entityHitResult;
+                }
+            }
 
             if (hitResult.getType() != HitResult.Type.MISS) {
                 this.onCollision(hitResult);
@@ -84,15 +98,27 @@ public class IceSpearProjectileEntity extends ProjectileEntity {
             if (isExploding)
                 return;
 
-            ServerWorld world = (ServerWorld) getWorld();
-            Vec3d pos = getPos().subtract(getVelocity());
+            World world = this.getWorld();
 
-            world.playSound(null, this.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 0.5F, 1.05F);
-            world.spawnParticles(ParticleTypes.CLOUD, pos.x, pos.y, pos.z, 3, 0.1F, 0.1F, 0.1F, 0.02F);
-            world.spawnParticles(ParticleTypes.WHITE_SMOKE, pos.x, pos.y, pos.z, 10, 0.1F, 0.1F, 0.1F, 0.04F);
+            if (!world.isClient()) {
+                ServerWorld serverWorld = (ServerWorld) getWorld();
+                Vec3d pos = getPos().subtract(getVelocity());
+
+                serverWorld.playSound(
+                        null, this.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.MASTER, 0.5F, 1.05F);
+                serverWorld.spawnParticles(ParticleTypes.CLOUD, pos.x, pos.y, pos.z, 3, 0.1F, 0.1F, 0.1F, 0.02F);
+                serverWorld.spawnParticles(ParticleTypes.WHITE_SMOKE, pos.x, pos.y, pos.z, 10, 0.1F, 0.1F, 0.1F, 0.04F);
+            }
 
             this.remove(Entity.RemovalReason.DISCARDED);
         }
+    }
+
+    protected EntityHitResult getEntityCollision(Vec3d currentPosition, Vec3d nextPosition) {
+        return ProjectileUtil.getEntityCollision(
+                this.getWorld(), this, currentPosition, nextPosition,
+                this.getBoundingBox().stretch(this.getVelocity()).expand(1.0), this::canHit
+        );
     }
 
     @Override
@@ -103,6 +129,15 @@ public class IceSpearProjectileEntity extends ProjectileEntity {
         Vec3d offset = blockHitResult.getPos().subtract(this.getPos()).normalize();
         this.setVelocity(offset);
         this.setPosition(blockHitResult.getPos().add(offset.multiply(0.25F)));
+    }
+
+    @Override
+    protected void onEntityHit(EntityHitResult entityHitResult) {
+        super.onEntityHit(entityHitResult);
+
+        if (!this.getWorld().isClient) {
+            Explode();
+        }
     }
 
     public void Explode() {
@@ -118,6 +153,21 @@ public class IceSpearProjectileEntity extends ProjectileEntity {
         world.spawnParticles(ParticleTypes.CLOUD, pos.x, pos.y, pos.z, 5, 0.1F, 0.1F, 0.1F, 0.05F);
         world.spawnParticles(ParticleTypes.WHITE_SMOKE, pos.x, pos.y, pos.z, 25, 0.1F, 0.1F, 0.1F, 0.15F);
 
+        ApplyEffects();
         this.remove(RemovalReason.DISCARDED);
+    }
+
+    private void ApplyEffects() {
+        Box box = this.getBoundingBox().expand(5.0, 5.0, 5.0);
+        List<LivingEntity> list = this.getWorld().getNonSpectatingEntities(LivingEntity.class, box);
+        if (!list.isEmpty()) {
+            for (LivingEntity livingEntity : list) {
+                double distance = this.distanceTo(livingEntity);
+                double val = distance / 4.0;
+                double percentage = 1 + 0.5 * (Math.cos(val * Math.PI) - 1);
+                livingEntity.setFrozenTicks(Math.min(livingEntity.getFrozenTicks() + (int) (400 * percentage), 600));
+                livingEntity.damage(this.getDamageSources().freeze(), (float) (8.0F * percentage));
+            }
+        }
     }
 }
