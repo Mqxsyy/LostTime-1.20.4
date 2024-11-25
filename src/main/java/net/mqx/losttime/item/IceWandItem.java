@@ -12,14 +12,12 @@ import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 import net.mqx.losttime.entity.projectile.IceSpearProjectileEntity;
 import net.mqx.losttime.interfaces.TimerAccess;
+import net.mqx.losttime.util.LostTimeUtils;
 import net.mqx.losttime.util.TimerData;
 
 import java.util.List;
-import java.util.Random;
 
 public class IceWandItem extends Item {
-    private final Random random = new Random();
-
     public IceWandItem(Settings settings) {
         super(settings);
     }
@@ -38,7 +36,8 @@ public class IceWandItem extends Item {
                 for (IceSpearProjectileEntity entity : entities) {
                     if (entity.getOwner() == user) {
                         ServerWorld serverWorld = (ServerWorld) world;
-                        ((TimerAccess) serverWorld).createTimer(new TimerData(random.nextLong(5), entity::Explode));
+                        ((TimerAccess) serverWorld).createTimer(
+                                new TimerData(LostTimeUtils.random.nextLong(5), entity::Explode));
                     }
                 }
             } else {
@@ -47,6 +46,5 @@ public class IceWandItem extends Item {
         }
 
         return TypedActionResult.pass(user.getStackInHand(hand));
-
     }
 }

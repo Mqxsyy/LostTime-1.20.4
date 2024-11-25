@@ -11,11 +11,11 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
 import net.mqx.losttime.LostTime;
 import net.mqx.losttime.client.render.entity.model.IceSpearProjectileEntityModel;
 import net.mqx.losttime.client.render.entity.model.ModEntityModelLayers;
 import net.mqx.losttime.entity.projectile.IceSpearProjectileEntity;
+import net.mqx.losttime.util.LostTimeUtils;
 
 public class IceSpearEntityRenderer extends EntityRenderer<IceSpearProjectileEntity> {
     private final IceSpearProjectileEntityModel model;
@@ -42,12 +42,7 @@ public class IceSpearEntityRenderer extends EntityRenderer<IceSpearProjectileEnt
                 MathHelper.lerp(tickDelta, entity.prevPitch, entity.getPitch()) + 90.0F));
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(this.model.getLayer(this.getTexture(entity)));
 
-        Vec3d pos = entity.getPos().subtract(entity.getVelocity());
-        int x = (int) Math.floor(pos.x);
-        int y = (int) Math.floor(pos.y);
-        int z = (int) Math.floor(pos.z);
-
-        BlockPos blockPos = new BlockPos(x, y, z);
+        BlockPos blockPos = LostTimeUtils.ToBlockPos(entity.getPos().subtract(entity.getVelocity()));
         int lightAbove = WorldRenderer.getLightmapCoordinates(entity.getWorld(), blockPos);
 
         this.model.render(matrices, vertexConsumer, lightAbove, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
