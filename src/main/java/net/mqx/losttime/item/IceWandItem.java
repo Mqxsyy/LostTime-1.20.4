@@ -41,6 +41,7 @@ public class IceWandItem extends Item {
                     }
                 }
             } else {
+                user.getItemCooldownManager().set(this, 20);
                 world.spawnEntity(projectile);
             }
         }
