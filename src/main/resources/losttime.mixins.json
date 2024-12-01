@@ -3,8 +3,9 @@
     "package": "net.mqx.losttime.mixin",
     "compatibilityLevel": "JAVA_17",
     "mixins": [
-        "ExampleMixin",
-        "Timer"
+        "Timer",
+        "PlayerScreenHandlerMixin",
+        "InventoryScreenMixin"
     ],
     "injectors": {
         "defaultRequire": 1

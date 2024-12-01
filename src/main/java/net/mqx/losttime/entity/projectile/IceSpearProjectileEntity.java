@@ -20,6 +20,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+import net.mqx.losttime.LostTime;
 import net.mqx.losttime.entity.ModEntityType;
 import net.mqx.losttime.interfaces.TimerAccess;
 import net.mqx.losttime.util.LostTimeUtils;
@@ -31,6 +32,7 @@ import java.util.List;
 public class IceSpearProjectileEntity extends ProjectileEntity {
     private boolean inGround = false;
     public boolean isExploding = false;
+    private int aliveTicks = 0;
     private int age = 0;
 
     public IceSpearProjectileEntity(EntityType<? extends ProjectileEntity> entityType, World world) {
@@ -51,34 +53,36 @@ public class IceSpearProjectileEntity extends ProjectileEntity {
     @Override
     public void tick() {
         super.tick();
+        this.aliveTicks++;
 
         if (!inGround) {
-            Vec3d velocity = this.getVelocity();
-            Vec3d position = this.getPos();
+            Vec3d vel = this.getVelocity();
+            Vec3d pos = this.getPos();
 
             if (this.prevPitch == 0.0F && this.prevYaw == 0.0F) {
-                double d = velocity.horizontalLength();
-                this.setYaw((float) (MathHelper.atan2(velocity.x, velocity.z) * 180.0F / (float) Math.PI));
-                this.setPitch((float) (MathHelper.atan2(velocity.y, d) * 180.0F / (float) Math.PI));
+                double d = vel.horizontalLength();
+                this.setYaw((float) (MathHelper.atan2(vel.x, vel.z) * 180.0F / (float) Math.PI));
+                this.setPitch((float) (MathHelper.atan2(vel.y, d) * 180.0F / (float) Math.PI));
                 this.prevYaw = this.getYaw();
                 this.prevPitch = this.getPitch();
             }
 
-            double x = velocity.x * 0.975F;
-            double y = velocity.y - 0.025F;
-            double z = velocity.z * 0.975F;
-            double horizontalLength = velocity.horizontalLength();
+            double drag = 0.99F;
+            double x = vel.x * drag;
+            double y = vel.y * drag - 0.05F;
+            double z = vel.z * drag;
+            double horizontalLength = vel.horizontalLength();
 
             this.setVelocity(new Vec3d(x, y, z));
 
             HitResult hitResult = this.getWorld()
                     .raycast(new RaycastContext(
-                            position, position.add(this.getVelocity()), RaycastContext.ShapeType.COLLIDER,
+                            pos, pos.add(this.getVelocity()), RaycastContext.ShapeType.COLLIDER,
                             RaycastContext.FluidHandling.NONE, this
                     ));
 
             if (hitResult.getType() == HitResult.Type.MISS) {
-                EntityHitResult entityHitResult = this.getEntityCollision(position, position.add(this.getVelocity()));
+                EntityHitResult entityHitResult = this.getEntityCollision(pos, pos.add(this.getVelocity()));
                 if (entityHitResult != null) {
                     hitResult = entityHitResult;
                 }
@@ -87,12 +91,21 @@ public class IceSpearProjectileEntity extends ProjectileEntity {
             if (hitResult.getType() != HitResult.Type.MISS) {
                 this.onCollision(hitResult);
             } else {
-                this.setYaw((float) (MathHelper.atan2(velocity.x, velocity.z) * 180.0F / (float) Math.PI));
-                this.setPitch((float) (MathHelper.atan2(velocity.y, horizontalLength) * 180.0F / (float) Math.PI));
+                this.setYaw((float) (MathHelper.atan2(vel.x, vel.z) * 180.0F / (float) Math.PI));
+                this.setPitch((float) (MathHelper.atan2(vel.y, horizontalLength) * 180.0F / (float) Math.PI));
                 this.setPitch(updateRotation(this.prevPitch, this.getPitch()));
                 this.setYaw(updateRotation(this.prevYaw, this.getYaw()));
 
-                this.setPosition(position.add(this.getVelocity()));
+                this.setPosition(pos.add(this.getVelocity()));
+            }
+
+            if (this.aliveTicks % 4 == 0) {
+                World world = this.getWorld();
+                if (!world.isClient) {
+                    ServerWorld serverWorld = (ServerWorld) world;
+                    serverWorld.spawnParticles(
+                            ParticleTypes.SNOWFLAKE, pos.x, pos.y, pos.z, 1, 0.1F, 0.1F, 0.1F, 0.02F);
+                }
             }
 
             return;
@@ -107,7 +120,7 @@ public class IceSpearProjectileEntity extends ProjectileEntity {
             World world = this.getWorld();
 
             if (!world.isClient()) {
-                ServerWorld serverWorld = (ServerWorld) getWorld();
+                ServerWorld serverWorld = (ServerWorld) this.getWorld();
                 Vec3d pos = getPos().subtract(getVelocity());
 
                 serverWorld.playSound(
@@ -122,8 +135,7 @@ public class IceSpearProjectileEntity extends ProjectileEntity {
     protected EntityHitResult getEntityCollision(Vec3d currentPosition, Vec3d nextPosition) {
         return ProjectileUtil.getEntityCollision(
                 this.getWorld(), this, currentPosition, nextPosition,
-                this.getBoundingBox().stretch(this.getVelocity()).expand(1.0),
-                this::canHit
+                this.getBoundingBox().stretch(this.getVelocity()).expand(1.0), this::canHit
         );
     }
 
@@ -140,6 +152,7 @@ public class IceSpearProjectileEntity extends ProjectileEntity {
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
         super.onEntityHit(entityHitResult);
+        this.setPosition(entityHitResult.getPos());
 
         if (!this.getWorld().isClient) {
             Explode();

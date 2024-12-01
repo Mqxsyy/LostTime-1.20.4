@@ -18,6 +18,8 @@ import net.mqx.losttime.util.TimerData;
 import java.util.List;
 
 public class IceWandItem extends Item {
+    private int lastUsage;
+
     public IceWandItem(Settings settings) {
         super(settings);
     }
@@ -26,7 +28,7 @@ public class IceWandItem extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (!world.isClient()) {
             IceSpearProjectileEntity projectile = new IceSpearProjectileEntity(world, user);
-            projectile.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 1.5F, 1.0F);
+            projectile.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 3.5F, 1.0F);
 
             if (Screen.hasShiftDown()) {
                 Box box = new Box(user.getBlockPos()).expand(64, 64, 64);
