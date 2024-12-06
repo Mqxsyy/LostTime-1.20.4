@@ -9,10 +9,14 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.mqx.losttime.LostTime;
+import net.mqx.losttime.item.cosmetic.CosmeticItem;
+import net.mqx.losttime.item.cosmetic.HaloCosmetic;
 
 public class ModItems {
     public static final Item ICE_SHARD = registerItem("ice_shard", new Item(new FabricItemSettings()));
     public static final Item ICE_WAND = registerItem("ice_wand", new IceWandItem(new FabricItemSettings()));
+
+    public static final CosmeticItem HALO = (CosmeticItem) registerItem("halo", new HaloCosmetic());
 
     private static void addItemsToIngredientItemGroup(FabricItemGroupEntries entries) {
         entries.add(ICE_SHARD);

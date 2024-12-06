@@ -16,6 +16,7 @@ public class ModItemGroups {
                     .icon(() -> new ItemStack(ModItems.ICE_SHARD)).entries(((displayContext, entries) -> {
                         entries.add(ModItems.ICE_SHARD);
                         entries.add(ModItems.ICE_WAND);
+                        entries.add(ModItems.HALO);
                     })).build()
     );
 
