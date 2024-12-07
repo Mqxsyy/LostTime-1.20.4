@@ -1,16 +1,20 @@
 package net.mqx.losttime.entity.player;
 
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
-import net.mqx.losttime.LostTime;
 import net.mqx.losttime.item.cosmetic.CosmeticItem;
 
 public class CosmeticInventory implements Inventory {
+    protected final LivingEntity entity;
     protected ItemStack itemStack = ItemStack.EMPTY;
+
+    public CosmeticInventory(LivingEntity entity) {
+        this.entity = entity;
+    }
 
     public NbtList writeNbt(NbtList nbtList) {
         if (this.isEmpty())
@@ -62,6 +66,7 @@ public class CosmeticInventory implements Inventory {
         if (!itemStack.isEmpty()) {
             ItemStack stack = this.itemStack;
             this.itemStack = ItemStack.EMPTY;
+            ((CosmeticItem) stack.getItem()).onUnequip(entity, entity.getWorld());
             return stack;
         }
 
@@ -72,6 +77,7 @@ public class CosmeticInventory implements Inventory {
     public void setStack(int slot, ItemStack stack) {
         if (stack.getItem() instanceof CosmeticItem) {
             this.itemStack = stack;
+            ((CosmeticItem) stack.getItem()).onEquip(entity, entity.getWorld());
         }
     }
 

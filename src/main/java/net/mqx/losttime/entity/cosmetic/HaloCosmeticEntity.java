@@ -25,8 +25,10 @@ public class HaloCosmeticEntity extends CosmeticEntity {
         age++;
 
         Entity owner = this.getOwner();
-        if (owner == null)
+        if (owner == null) {
+            this.discard();
             return;
+        }
 
         double x = owner.getX();
         double y = owner.getEyeY() + 0.5F + Math.sin(age * 0.05F) * 0.05F;

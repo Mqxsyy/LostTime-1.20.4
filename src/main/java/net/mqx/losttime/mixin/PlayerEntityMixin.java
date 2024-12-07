@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements CosmeticInventoryAccess {
-    private final CosmeticInventory cosmeticInventory = new CosmeticInventory();
+    private final CosmeticInventory cosmeticInventory = new CosmeticInventory(this);
 
     protected PlayerEntityMixin() {
         super(null, null);

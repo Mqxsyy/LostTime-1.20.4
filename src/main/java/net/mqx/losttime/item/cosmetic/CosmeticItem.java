@@ -1,6 +1,6 @@
 package net.mqx.losttime.item.cosmetic;
 
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 
@@ -9,7 +9,7 @@ public abstract class CosmeticItem extends Item {
         super(settings);
     }
 
-    public abstract void onEquip(PlayerEntity owner, World world);
+    public abstract void onEquip(LivingEntity owner, World world);
 
-    public abstract void onUnequip(PlayerEntity owner, World world);
+    public abstract void onUnequip(LivingEntity owner, World world);
 }
