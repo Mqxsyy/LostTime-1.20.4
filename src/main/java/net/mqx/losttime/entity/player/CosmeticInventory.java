@@ -4,10 +4,38 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
+import net.mqx.losttime.LostTime;
 import net.mqx.losttime.item.cosmetic.CosmeticItem;
 
 public class CosmeticInventory implements Inventory {
     protected ItemStack itemStack = ItemStack.EMPTY;
+
+    public NbtList writeNbt(NbtList nbtList) {
+        if (this.isEmpty())
+            return nbtList;
+
+        NbtCompound nbtCompound = new NbtCompound();
+        nbtCompound.putByte("CosmeticSlot", (byte) 0);
+        this.getStack(0).writeNbt(nbtCompound);
+        nbtList.add(nbtCompound);
+
+        return nbtList;
+    }
+
+    public void readNbt(NbtList nbtList) {
+        this.clear();
+
+        for (int i = 0; i < nbtList.size(); i++) {
+            NbtCompound nbtCompound = nbtList.getCompound(i);
+            ItemStack itemStack = ItemStack.fromNbt(nbtCompound);
+
+            if (!itemStack.isEmpty()) {
+                this.setStack(0, itemStack);
+            }
+        }
+    }
 
     @Override
     public int size() {

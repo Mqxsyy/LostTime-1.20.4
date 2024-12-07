@@ -23,8 +23,8 @@ public class ModEntityType implements ModInitializer {
     );
 
     public static final EntityType<HaloCosmeticEntity> HALO_COSMETIC = register(
-            "halo",
-            EntityType.Builder.<HaloCosmeticEntity>create(HaloCosmeticEntity::new, SpawnGroup.MISC).setDimensions(0.5f, 0.1F)
+            "halo", EntityType.Builder.<HaloCosmeticEntity>create(HaloCosmeticEntity::new, SpawnGroup.MISC)
+                    .setDimensions(0.5f, 0.1F)
     );
 
     @Override
