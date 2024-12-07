@@ -8,6 +8,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.mqx.losttime.LostTime;
+import net.mqx.losttime.entity.cosmetic.HaloCosmeticEntity;
 import net.mqx.losttime.entity.projectile.IceSpearProjectileEntity;
 
 public class ModEntityType implements ModInitializer {
@@ -19,6 +20,11 @@ public class ModEntityType implements ModInitializer {
             "ice_spear",
             EntityType.Builder.<IceSpearProjectileEntity>create(IceSpearProjectileEntity::new, SpawnGroup.MISC)
                     .setDimensions(0.5f, 0.5f)
+    );
+
+    public static final EntityType<HaloCosmeticEntity> HALO_COSMETIC = register(
+            "halo",
+            EntityType.Builder.<HaloCosmeticEntity>create(HaloCosmeticEntity::new, SpawnGroup.MISC).setDimensions(0.5f, 0.1F)
     );
 
     @Override

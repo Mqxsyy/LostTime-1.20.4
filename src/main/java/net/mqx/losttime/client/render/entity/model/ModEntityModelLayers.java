@@ -7,4 +7,7 @@ import net.mqx.losttime.LostTime;
 public class ModEntityModelLayers {
     public static final EntityModelLayer ICE_SPEAR_PROJECTILE = new EntityModelLayer(
             new Identifier(LostTime.MOD_ID, "ice_spear_projectile"), "main");
+
+    public static final EntityModelLayer HALO_COSMETIC = new EntityModelLayer(
+            new Identifier(LostTime.MOD_ID, "halo_cosmetic"), "main");
 }

@@ -1,4 +1,4 @@
-package net.mqx.losttime.client.render.entity;
+package net.mqx.losttime.client.render.entity.renderer;
 
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumer;
@@ -12,14 +12,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 import net.mqx.losttime.LostTime;
-import net.mqx.losttime.client.render.entity.model.IceSpearProjectileEntityModel;
 import net.mqx.losttime.client.render.entity.model.ModEntityModelLayers;
+import net.mqx.losttime.client.render.entity.model.projectile.IceSpearProjectileEntityModel;
 import net.mqx.losttime.entity.projectile.IceSpearProjectileEntity;
 import net.mqx.losttime.util.LostTimeUtils;
 
 public class IceSpearEntityRenderer extends EntityRenderer<IceSpearProjectileEntity> {
     private final IceSpearProjectileEntityModel model;
-    private static final Identifier TEXTURE = new Identifier(LostTime.MOD_ID, "textures/entity/ice_spear.png");
+    private static final Identifier TEXTURE = new Identifier(
+            LostTime.MOD_ID, "textures/entity/projectiles/ice_spear.png");
 
     public IceSpearEntityRenderer(EntityRendererFactory.Context ctx) {
         super(ctx);

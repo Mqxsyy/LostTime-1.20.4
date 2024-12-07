@@ -1,4 +1,4 @@
-package net.mqx.losttime.client.render.entity.model;
+package net.mqx.losttime.client.render.entity.model.projectile;
 
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;

@@ -10,13 +10,13 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.mqx.losttime.LostTime;
 import net.mqx.losttime.item.cosmetic.CosmeticItem;
-import net.mqx.losttime.item.cosmetic.HaloCosmetic;
+import net.mqx.losttime.item.cosmetic.HaloCosmeticItem;
 
 public class ModItems {
     public static final Item ICE_SHARD = registerItem("ice_shard", new Item(new FabricItemSettings()));
     public static final Item ICE_WAND = registerItem("ice_wand", new IceWandItem(new FabricItemSettings()));
 
-    public static final CosmeticItem HALO = (CosmeticItem) registerItem("halo", new HaloCosmetic());
+    public static final CosmeticItem HALO = (CosmeticItem) registerItem("halo", new HaloCosmeticItem());
 
     private static void addItemsToIngredientItemGroup(FabricItemGroupEntries entries) {
         entries.add(ICE_SHARD);

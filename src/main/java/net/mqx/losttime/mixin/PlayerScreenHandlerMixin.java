@@ -4,14 +4,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.util.math.Vec2f;
 import net.mqx.losttime.entity.player.CosmeticInventory;
 import net.mqx.losttime.screen.CosmeticPlayerScreenHandler;
 import net.mqx.losttime.screen.CosmeticSlot;
 import net.mqx.losttime.util.Vec2;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -28,7 +25,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements 
     @Inject(at = @At("RETURN"), method = "<init>")
     private void init(PlayerInventory playerInv, boolean onServer, PlayerEntity owner, CallbackInfo info) {
         CosmeticInventory cosmeticInventory = new CosmeticInventory();
-        this.addSlot(new CosmeticSlot(cosmeticInventory, COSMETIC_ID, slotPos.x, slotPos.y));
+        this.addSlot(new CosmeticSlot(cosmeticInventory, COSMETIC_ID, slotPos.x, slotPos.y, owner));
     }
 
     @Override
