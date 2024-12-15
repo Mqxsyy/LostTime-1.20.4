@@ -5,7 +5,9 @@
     "mixins": [
         "Timer",
         "PlayerScreenHandlerMixin",
+        "CreativeScreenHandlerMixin",
         "InventoryScreenMixin",
+        "CreativeInventoryScreenMixin",
         "PlayerEntityMixin"
     ],
     "injectors": {
